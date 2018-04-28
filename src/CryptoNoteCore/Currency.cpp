@@ -181,19 +181,19 @@ bool Currency::getBlockReward(uint8_t blockMajorVersion, size_t medianSize, size
   uint64_t baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 
 
-  uint64_t factorCut = 700000000000; // 70 Lbit
+  uint64_t factorCut = 700000000000; // 
   uint64_t coinCut_v1 = 12716000000000000; //
   uint64_t coinCut_v2 = 33000000000000000; //
-  uint64_t factorCut2 = 470000000000; // 47 Lbit
+  uint64_t factorCut2 = 470000000000; // 
   uint64_t coinCut_v3 = 33000010000000000; //
   uint64_t coinCut_v4 = 50000000000000000; //
-  uint64_t factorCut3 = 940000000000; // 94 Lbit
+  uint64_t factorCut3 = 940000000000; // 
   uint64_t coinCut_v5 = 50000010000000000;
   uint64_t coinCut_v6 = 54737600000000000;
-  uint64_t factorCut4 = 470000000000; // 47 Lbit
+  uint64_t factorCut4 = 470000000000; // 
   uint64_t coinCut_v7 = 54737610000000000;
   uint64_t coinCut_v8 = 102156000000000000;
-  uint64_t factorCut5 = 940000000000; // 94 Lbit
+  uint64_t factorCut5 = 940000000000; // 
   uint64_t coinCut_v9 = 102156100000000000;
   uint64_t coinCut_v10 = 106000000000000000;
 
@@ -205,31 +205,31 @@ if (alreadyGeneratedCoins == 0 && m_genesisBlockReward != 0) {
   // Se entrega recompensa Base
   baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 } else if (alreadyGeneratedCoins >= coinCut_v1 && alreadyGeneratedCoins < coinCut_v2){
-  // Primer corte de recompensa 70 Lbit por bloque
+  // 
   baseReward = factorCut;
 } else if(alreadyGeneratedCoins >= coinCut_v2 && alreadyGeneratedCoins < coinCut_v3){
   // Entrega recompensa normal**
   baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 } else if(alreadyGeneratedCoins >= coinCut_v3 && alreadyGeneratedCoins <= coinCut_v4){
-  // Entrega Corte de recompensa 47 Lbit por bloque
+  // 
   baseReward = factorCut2;
 } else if(alreadyGeneratedCoins >= coinCut_v4 && alreadyGeneratedCoins < coinCut_v5){
   // Entrega recompensa normal**
   baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 } else if(alreadyGeneratedCoins >= coinCut_v5 && alreadyGeneratedCoins <= coinCut_v6){
-  // Entrega Corte de recompensa 94 Lbit por bloque
+  // 
   baseReward = factorCut3;
 } else if(alreadyGeneratedCoins >= coinCut_v6 && alreadyGeneratedCoins < coinCut_v7){
   // Entrega recompensa normal**
   baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 } else if(alreadyGeneratedCoins >= coinCut_v7 && alreadyGeneratedCoins <= coinCut_v8){
-  // Entrega Corte de recompensa 47 Lbit por bloque
+  // 
   baseReward = factorCut4;
 } else if(alreadyGeneratedCoins >= coinCut_v8 && alreadyGeneratedCoins < coinCut_v9){
   // Entrega recompensa normal**
   baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
 } else if(alreadyGeneratedCoins >= coinCut_v9 && alreadyGeneratedCoins <= coinCut_v10){
-  // Entrega Corte de recompensa 94 Lbit por bloque
+  // 
   baseReward = factorCut5;
 } else if(alreadyGeneratedCoins > coinCut_v10){
   // Entrega recompensa normal**
