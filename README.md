@@ -50,7 +50,7 @@ Your Wallet number or network Identifier is a hexadecimal code that starts with 
 # How to backup my Wallet?
 You must click on the "File" menu and then on "BackUp”, enter a name and place where to save your backup. After this steps, your file with the extension ".wallet" would be created.
 
-# How much a LBIT worth?
+# How much a LBIT is worth?
 The value of each LBIT will be determinate once it is listed by one or more exchanges. Also depends on many factors, including the amount in circulation, the level of emission, its impact on the community, its possible uses, its infrastructure and level of development.
 
 # What is the reward per block?
