@@ -87,6 +87,13 @@ The pre-mine is 1.5%, part of which would be shared among the community that sup
 # Is there Airdrop?
 Yes, there are several airdrops, which will share part of the pre-mine among users, these will be announced on our social networks.
 
+## Pool List
+| Pool | Link |
+|------|------|
+| lithiumbit.cl | [http://pool01.lithiumbit.com/](http://pool01.lithiumbit.com/) |
+| youpool.io | [http://youpool.io/LBIT/](http://youupool.io.LBIT/) |
+| hashpool.frl | [http://lbit.hashpool.frl](http://lbit.hashpool.frl) |
+
 
 This document will be in constant development.
 Team LithiumBit © 2018
