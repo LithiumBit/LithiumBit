@@ -15,7 +15,7 @@ Lithiumbit is a new cryptocurrency developed in Chile. The goal is be the most e
 - Applications: Once the price of LithiumBit has stabilized, we will launch the web and mobile applications that will allow you to send and receive money easily, quickly and safely. Also, we will launch a market (lithium market) for the use in the real world of LBIT, which allows to buy and sell products and services.
 
 ## What is Lithium Market?
-It is a website similar to Amazon that will allow you to buy and sell products and services. You will be able to pay with LBIT and other cryptocurrencies.
+It is a website similar to Amazon that will allow you to buy and sell products and services. You will be able to pay with LBIT and other cryptocurrencies. DEMO: [http://market.lithiumbit.com/](http://market.lithiumbit.com/)
 
 ## What is Lithium Pay?
 Mobile and web applications that will allow send and receive money between people or companies very easily, quickly and safely.
