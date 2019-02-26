@@ -63,7 +63,7 @@ struct COMMAND_RPC_GET_BLOCKS_FAST {
 
   struct request {
     std::vector<Crypto::Hash> block_ids; //*first 10 blocks id goes sequential, next goes in pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
-    
+
     void serialize(ISerializer &s) {
       serializeAsBinary(block_ids, "block_ids", s);
     }
@@ -94,7 +94,7 @@ struct COMMAND_RPC_GET_TRANSACTIONS {
     void serialize(ISerializer &s) {
       KV_MEMBER(txs_as_hex)
       KV_MEMBER(missed_tx)
-      KV_MEMBER(status)    
+      KV_MEMBER(status)
     }
   };
 };
@@ -153,7 +153,7 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
 
 //-----------------------------------------------
 struct COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES {
-  
+
   struct request {
     Crypto::Hash txid;
 
@@ -509,6 +509,7 @@ struct f_block_short_response {
   std::string hash;
   uint64_t tx_count;
   uint64_t cumul_size;
+  uint64_t difficulty;
 
   void serialize(ISerializer &s) {
     KV_MEMBER(timestamp)
@@ -516,12 +517,13 @@ struct f_block_short_response {
     KV_MEMBER(hash)
     KV_MEMBER(cumul_size)
     KV_MEMBER(tx_count)
+    KV_MEMBER(difficulty)
   }
 };
 
 struct f_block_details_response {
   uint8_t major_version;
-  uint8_t minor_version;  
+  uint8_t minor_version;
   uint64_t timestamp;
   std::string prev_hash;
   uint32_t nonce;
