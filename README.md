@@ -91,7 +91,7 @@ Yes, there are several airdrops, which will share part of the pre-mine among use
 | Pool | Link |
 |------|------|
 | lithiumbit.cl | [http://pool01.lithiumbit.com/](http://pool01.lithiumbit.com/) |
-| youpool.io | [http://youpool.io/LBIT/](http://youupool.io.LBIT/) |
+| easyhash.pro | [https://easyhash.pro/lbit/](https://easyhash.pro/lbit/) |
 | hashpool.frl | [http://lbit.hashpool.frl](http://lbit.hashpool.frl) |
 
 
