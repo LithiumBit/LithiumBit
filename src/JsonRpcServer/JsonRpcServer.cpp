@@ -37,11 +37,12 @@
 
 namespace CryptoNote {
 
-JsonRpcServer::JsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup) :
-  HttpServer(sys, loggerGroup), 
+JsonRpcServer::JsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup, PaymentService::Configuration& config) :
+  HttpServer(sys, loggerGroup),
   system(sys),
   stopEvent(stopEvent),
-  logger(loggerGroup, "JsonRpcServer")
+  logger(loggerGroup, "JsonRpcServer"),
+  config(config)
 {
 }
 
@@ -95,7 +96,7 @@ void JsonRpcServer::prepareJsonResponse(const Common::JsonValue& req, Common::Js
   if (req.contains("id")) {
     resp.insert("id", req("id"));
   }
-  
+
   resp.insert("jsonrpc", "2.0");
 }
 
@@ -162,6 +163,23 @@ void JsonRpcServer::makeMethodNotFoundResponse(Common::JsonValue& resp) {
   error.insert("message", message);
 
   resp.insert("error", error);
+}
+
+void JsonRpcServer::makeInvalidPasswordResponse(Common::JsonValue& resp) {
+  using Common::JsonValue;
+
+   JsonValue error(JsonValue::OBJECT);
+
+   JsonValue code;
+  code = static_cast<int64_t>(-32604);
+
+   JsonValue message;
+  message = "Invalid or no rpc password";
+
+   error.insert("code", code);
+  error.insert("message", message);
+
+   resp.insert("error", error);
 }
 
 void JsonRpcServer::fillJsonResponse(const Common::JsonValue& v, Common::JsonValue& resp) {
