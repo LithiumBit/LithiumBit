@@ -198,6 +198,7 @@ Core::Core(const Currency& currency, Logging::ILogger& logger, Checkpoints&& che
 
   upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_2, currency.upgradeHeight(BLOCK_MAJOR_VERSION_2));
   upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_3, currency.upgradeHeight(BLOCK_MAJOR_VERSION_3));
+  upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_4, currency.upgradeHeight(BLOCK_MAJOR_VERSION_4));
 
   transactionPool = std::unique_ptr<ITransactionPoolCleanWrapper>(new TransactionPoolCleanWrapper(
     std::unique_ptr<ITransactionPool>(new TransactionPool(logger)),
@@ -1025,7 +1026,9 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
   if (b.majorVersion == BLOCK_MAJOR_VERSION_1) {
     b.minorVersion = currency.upgradeHeight(BLOCK_MAJOR_VERSION_2) == IUpgradeDetector::UNDEF_HEIGHT ? BLOCK_MINOR_VERSION_1 : BLOCK_MINOR_VERSION_0;
   } else if (b.majorVersion >= BLOCK_MAJOR_VERSION_2) {
-    if (currency.upgradeHeight(BLOCK_MAJOR_VERSION_3) == IUpgradeDetector::UNDEF_HEIGHT) {
+    if (currency.upgradeHeight(BLOCK_MAJOR_VERSION_4) == IUpgradeDetector::UNDEF_HEIGHT) {
+      b.minorVersion = b.majorVersion == BLOCK_MAJOR_VERSION_3 ? BLOCK_MINOR_VERSION_1 : BLOCK_MINOR_VERSION_0;
+    } else if (currency.upgradeHeight(BLOCK_MAJOR_VERSION_3) == IUpgradeDetector::UNDEF_HEIGHT) {
       b.minorVersion = b.majorVersion == BLOCK_MAJOR_VERSION_2 ? BLOCK_MINOR_VERSION_1 : BLOCK_MINOR_VERSION_0;
     } else {
       b.minorVersion = BLOCK_MINOR_VERSION_0;
@@ -1045,6 +1048,50 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
 
   b.previousBlockHash = getTopBlockHash();
   b.timestamp = time(nullptr);
+
+    /* Ok, so if an attacker is fiddling around with timestamps on the network,
+         they can make it so all the valid pools / miners don't produce valid
+         blocks. This is because the timestamp is created as the users current time,
+         however, if the attacker is a large % of the hashrate, they can slowly
+         increase the timestamp into the future, shifting the median timestamp
+         forwards. At some point, this will mean the valid pools will submit a
+         block with their valid timestamps, and it will be rejected for being
+         behind the median timestamp / too far in the past. The simple way to
+         handle this is just to check if our timestamp is going to be invalid, and
+         set it to the median.
+         Once the attack ends, the median timestamp will remain how it is, until
+         the time on the clock goes forwards, and we can start submitting valid
+         timestamps again, and then we are back to normal. */
+
+      /* Thanks to jagerman for this patch:
+         https://github.com/loki-project/loki/pull/26 */
+
+      /* How many blocks we look in the past to calculate the median timestamp */
+
+      uint64_t blockchain_timestamp_check_window;
+
+      if (height >= CryptoNote::parameters::ZAWY_LWMA_DIFFICULTY_BLOCK_INDEX){
+          blockchain_timestamp_check_window = CryptoNote::parameters::BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW_V4;
+      }else{
+          blockchain_timestamp_check_window = CryptoNote::parameters::BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW;
+      }
+
+      /* Skip the first N blocks, we don't have enough blocks to calculate a
+         proper median yet */
+      if (height >= blockchain_timestamp_check_window){
+          std::vector<uint64_t> timestamps;
+
+          /* For the last N blocks, get their timestamps */
+          for (size_t offset = height - blockchain_timestamp_check_window; offset < height; offset++){
+              timestamps.push_back(getBlockTimestampByIndex(offset));
+          }
+
+          uint64_t medianTimestamp = Common::medianValue(timestamps);
+
+          if (b.timestamp < medianTimestamp){
+              b.timestamp = medianTimestamp;
+          }
+      }
 
   size_t medianSize = calculateCumulativeBlocksizeLimit(height) / 2;
 
@@ -1071,7 +1118,7 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
   }
 
   if (currency.mandatoryTransaction()) {
-    if (transactionsSize == 0 && height > parameters::CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW) { 
+    if (transactionsSize == 0 && height > parameters::CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW) {
       logger(Logging::ERROR, Logging::BRIGHT_RED) << "Need at least one transaction beside base transaction";
       return false;
     }
@@ -1937,7 +1984,7 @@ BlockDetails Core::getBlockDetails(const Crypto::Hash& blockHash) const {
 
   uint32_t blockIndex = segment->getBlockIndex(blockHash);
   BlockTemplate blockTemplate = restoreBlockTemplate(segment, blockIndex);
-  
+
   BlockDetails blockDetails;
   blockDetails.majorVersion = blockTemplate.majorVersion;
   blockDetails.minorVersion = blockTemplate.minorVersion;
@@ -2089,7 +2136,7 @@ TransactionDetails Core::getTransactionDetails(const Crypto::Hash& transactionHa
   }
   transactionDetails.extra.publicKey = transaction->getTransactionPublicKey();
   transaction->getExtraNonce(transactionDetails.extra.nonce);
-  
+
   transactionDetails.signatures = rawTransaction.signatures;
 
   transactionDetails.inputs.reserve(transaction->getInputCount());

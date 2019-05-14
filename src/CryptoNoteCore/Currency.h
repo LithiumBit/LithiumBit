@@ -41,6 +41,7 @@ public:
   uint32_t minedMoneyUnlockWindow() const { return m_minedMoneyUnlockWindow; }
 
   size_t timestampCheckWindow() const { return m_timestampCheckWindow; }
+  size_t timestampCheckWindowV4() const { return m_timestampCheckWindowV4; }
   uint64_t blockFutureTimeLimit() const { return m_blockFutureTimeLimit; }
 
   uint64_t moneySupply() const { return m_moneySupply; }
@@ -70,6 +71,7 @@ public:
 
   uint64_t difficultyTarget() const { return m_difficultyTarget; }
   size_t difficultyWindow() const { return m_difficultyWindow; }
+  size_t difficultyWindowV4() const { return m_difficultyWindow_v4; }
 size_t difficultyWindowByBlockVersion(uint8_t blockMajorVersion) const;
   size_t difficultyLag() const { return m_difficultyLag; }
 size_t difficultyLagByBlockVersion(uint8_t blockMajorVersion) const;
@@ -133,7 +135,9 @@ size_t difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion) const;
   bool parseAmount(const std::string& str, uint64_t& amount) const;
 
   Difficulty nextDifficulty(std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
+
 Difficulty nextDifficultyZawyLWMA(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
+
 Difficulty nextDifficultyZawyV1(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
 Difficulty nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
 Difficulty nextDifficultyDefault(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
@@ -162,6 +166,7 @@ private:
   uint32_t m_minedMoneyUnlockWindow;
 
   size_t m_timestampCheckWindow;
+  size_t m_timestampCheckWindowV4;
   uint64_t m_blockFutureTimeLimit;
 
   uint64_t m_moneySupply;
@@ -190,6 +195,7 @@ private:
 
   uint64_t m_difficultyTarget;
   size_t m_difficultyWindow;
+  size_t m_difficultyWindow_v4;
   size_t m_difficultyLag;
   size_t m_difficultyCut;
 
@@ -210,6 +216,7 @@ private:
 
   uint32_t m_upgradeHeightV2;
   uint32_t m_upgradeHeightV3;
+  uint32_t m_upgradeHeightV4;
   unsigned int m_upgradeVotingThreshold;
   uint32_t m_upgradeVotingWindow;
   uint32_t m_upgradeWindow;
@@ -252,6 +259,8 @@ public:
   CurrencyBuilder& minedMoneyUnlockWindow(uint32_t val) { m_currency.m_minedMoneyUnlockWindow = val; return *this; }
 
   CurrencyBuilder& timestampCheckWindow(size_t val) { m_currency.m_timestampCheckWindow = val; return *this; }
+  CurrencyBuilder& timestampCheckWindowV4(size_t val) { m_currency.m_timestampCheckWindowV4 = val; return *this; }
+
   CurrencyBuilder& blockFutureTimeLimit(uint64_t val) { m_currency.m_blockFutureTimeLimit = val; return *this; }
 
   CurrencyBuilder& moneySupply(uint64_t val) { m_currency.m_moneySupply = val; return *this; }
@@ -279,6 +288,7 @@ public:
 
   CurrencyBuilder& difficultyTarget(uint64_t val) { m_currency.m_difficultyTarget = val; return *this; }
   CurrencyBuilder& difficultyWindow(size_t val);
+  CurrencyBuilder& difficultyWindowV4(size_t val);
   CurrencyBuilder& difficultyLag(size_t val) { m_currency.m_difficultyLag = val; return *this; }
   CurrencyBuilder& difficultyCut(size_t val) { m_currency.m_difficultyCut = val; return *this; }
 
@@ -299,6 +309,7 @@ public:
 
   CurrencyBuilder& upgradeHeightV2(uint32_t val) { m_currency.m_upgradeHeightV2 = val; return *this; }
   CurrencyBuilder& upgradeHeightV3(uint32_t val) { m_currency.m_upgradeHeightV3 = val; return *this; }
+  CurrencyBuilder& upgradeHeightV4(uint32_t val) { m_currency.m_upgradeHeightV4 = val; return *this; }
   CurrencyBuilder& upgradeVotingThreshold(unsigned int val);
   CurrencyBuilder& upgradeVotingWindow(uint32_t val) { m_currency.m_upgradeVotingWindow = val; return *this; }
   CurrencyBuilder& upgradeWindow(uint32_t val);
@@ -306,7 +317,7 @@ public:
   CurrencyBuilder& blocksFileName(const std::string& val) { m_currency.m_blocksFileName = val; return *this; }
   CurrencyBuilder& blockIndexesFileName(const std::string& val) { m_currency.m_blockIndexesFileName = val; return *this; }
   CurrencyBuilder& txPoolFileName(const std::string& val) { m_currency.m_txPoolFileName = val; return *this; }
-  
+
   CurrencyBuilder& isBlockexplorer(const bool val) { m_currency.m_isBlockexplorer = val; return *this; }
   CurrencyBuilder& testnet(bool val) { m_currency.m_testnet = val; return *this; }
 
